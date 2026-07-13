@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Study Companion — TS SCERT Textbooks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#2A231C; --sub:#8A7F6E; --cream:#F6EDDD; --card:#FFFFFF; --line:#E7DBC4;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:'Manrope',sans-serif;}
+  .app{max-width:480px;margin:0 auto;min-height:100vh;position:relative;padding-bottom:84px;}
+  .eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--sub);}
+  h1{font-family:'Spectral',serif;font-weight:700;margin:4px 0 0;}
+  .header{display:flex;align-items:center;justify-content:space-between;padding:22px 18px 0;}
+  .logo{width:42px;height:42px;border-radius:12px;background:#C1432E;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;flex-shrink:0;}
+  .hero{margin:20px 18px 0;border-radius:18px;background:linear-gradient(135deg,#3A342B,#4E4738);padding:22px;color:#F6EDDD;}
+  .hero .tag{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:1.5px;color:#D9A46A;text-transform:uppercase;}
+  .hero h2{font-family:'Spectral',serif;font-weight:600;font-size:22px;margin:6px 0 0;max-width:220px;line-height:1.25;}
+  .hero p{font-size:12.5px;color:#C9C0AE;margin-top:10px;max-width:220px;line-height:1.5;}
+  .section-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--sub);margin:22px 18px 10px;}
+  .chips{display:flex;gap:8px;overflow-x:auto;padding:0 18px 4px;}
+  .chip{flex-shrink:0;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-family:'Manrope',sans-serif;font-weight:600;font-size:13.5px;cursor:pointer;white-space:nowrap;}
+  .chip.active{border:none;background:var(--ink);color:var(--cream);}
+  .book-list{display:flex;flex-direction:column;gap:12px;padding:20px 18px 0;}
+  .book-card{display:flex;align-items:center;gap:14px;border:none;border-radius:16px;padding:16px;text-align:left;cursor:pointer;width:100%;}
+  .book-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:18px;}
+  .book-meta{flex:1;min-width:0;}
+  .book-subject{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:700;}
+  .book-title{font-family:'Spectral',serif;font-weight:600;font-size:16px;margin-top:2px;}
+  .tags{display:flex;gap:6px;margin-top:8px;}
+  .tag-pill{font-family:'Manrope',sans-serif;font-size:11px;font-weight:700;background:rgba(255,255,255,0.6);padding:3px 9px;border-radius:999px;}
+  .chevron{color:var(--sub);flex-shrink:0;}
+  .empty{color:var(--sub);font-size:13.5px;padding:20px 18px;}
+
+  .footer{margin:30px 18px 0;padding-top:18px;border-top:1px solid var(--line);text-align:center;}
+  .footer .dev{font-size:12px;color:var(--sub);}
+  .footer .dev b{color:var(--ink);}
+  .footer a{display:inline-block;margin-top:6px;font-family:'Space Mono',monospace;font-size:12px;color:#C1432E;text-decoration:none;font-weight:700;}
+
+  .adslot{margin:18px 18px 0;border-radius:14px;border:1px dashed var(--line);background:rgba(255,255,255,0.5);padding:14px 16px;text-align:center;}
+  .adslot .l1{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--sub);}
+  .adslot .l2{font-family:'Manrope',sans-serif;font-size:11.5px;color:var(--sub);margin-top:4px;}
+
+  .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-top:1px solid var(--line);display:flex;padding:10px 0 14px;z-index:40;}
+  .nav-btn{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--sub);font-family:'Manrope',sans-serif;font-weight:700;font-size:9.5px;padding:0 2px;}
+  .nav-btn.active{color:#C1432E;}
+  .nav-btn svg{width:18px;height:18px;}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .back-btn{display:flex;align-items:center;gap:4px;background:none;border:none;color:var(--sub);font-family:'Manrope',sans-serif;font-weight:600;font-size:13.5px;cursor:pointer;padding:0;margin:0 0 16px;}
+  .detail-pad{padding:22px 18px 8px;}
+  .detail-head{display:flex;align-items:center;gap:14px;}
+  .open-pdf-btn{margin-top:26px;width:100%;display:flex;align-items:center;gap:12px;background:var(--ink);border:none;border-radius:14px;padding:16px 18px;cursor:pointer;color:var(--cream);font-family:'Manrope',sans-serif;font-weight:700;font-size:14.5px;}
+  .drive-link{margin-top:10px;display:flex;align-items:center;gap:8px;justify-content:center;font-family:'Manrope',sans-serif;font-size:12.5px;color:var(--sub);text-decoration:none;padding:8px 0;}
+
+  /* PDF viewer overlay */
+  #pdfOverlay{position:fixed;inset:0;background:#171B26;z-index:60;display:none;flex-direction:column;}
+  #pdfOverlay.open{display:flex;}
+  .pdf-topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--card);border-bottom:1px solid var(--line);gap:8px;flex-wrap:wrap;}
+  .pdf-title{font-family:'Spectral',serif;font-weight:600;font-size:13px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:80px;}
+  .pdf-frame-wrap{position:relative;flex:1;}
+  #pdfFrame{position:absolute;inset:0;width:100%;height:100%;border:none;}
+  #annCanvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;}
+  .tool-row{display:flex;gap:6px;padding:10px 12px;background:var(--card);border-top:1px solid var(--line);align-items:center;flex-wrap:wrap;}
+  .tool-btn{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);}
+  .tool-btn.active{background:var(--ink);color:var(--cream);border-color:var(--ink);}
+  .tool-btn svg{width:18px;height:18px;}
+  .icon-btn{background:none;border:none;cursor:pointer;color:var(--ink);display:flex;padding:4px;}
+
+  .saved-list{display:flex;flex-direction:column;gap:10px;padding:0 18px;}
+  .saved-card{display:flex;align-items:center;gap:12px;border:none;border-radius:14px;padding:14px;text-align:left;cursor:pointer;width:100%;}
+  .saved-title{font-family:'Spectral',serif;font-weight:600;font-size:14.5px;}
+  .saved-sub{font-size:12px;color:var(--sub);margin-top:2px;}
+</style>
+</head>
+<body>
+
+<!-- ONBOARDING -->
+<div id="onboardOverlay" style="position:fixed;inset:0;background:var(--cream);z-index:80;display:none;flex-direction:column;justify-content:center;padding:28px;">
+  <div style="max-width:420px;margin:0 auto;width:100%;">
+    <div class="logo" style="margin-bottom:16px;">🎓</div>
+    <div class="eyebrow">Before you start</div>
+    <h1 style="font-size:24px;margin:4px 0 6px;">Tell us about you</h1>
+    <p style="font-family:'Manrope',sans-serif;font-size:13px;color:var(--sub);line-height:1.5;margin:0 0 22px;">This just personalizes your library. It's saved only on this device.</p>
+
+    <div style="margin-bottom:14px;">
+      <div class="eyebrow" style="margin-bottom:6px;">I am a</div>
+      <div class="chips" id="onboardRoleChips" style="padding:0;overflow-x:auto;"></div>
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <div class="eyebrow" style="margin-bottom:6px;">Your name</div>
+      <input id="onboardName" placeholder="e.g. Akhil Netha" style="width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;font-family:'Manrope',sans-serif;">
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <div class="eyebrow" style="margin-bottom:6px;" id="onboardClassLabel">Your class</div>
+      <div class="chips" id="onboardClassChips" style="padding:0;overflow-x:auto;"></div>
+    </div>
+
+    <div style="margin-bottom:22px;">
+      <div class="eyebrow" style="margin-bottom:6px;">School name</div>
+      <input id="onboardSchool" placeholder="e.g. ZPHS EDULALINGAMPETA" style="width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;font-family:'Manrope',sans-serif;">
+    </div>
+
+    <button id="onboardSubmit" onclick="submitOnboarding()" style="width:100%;background:var(--ink);color:var(--cream);border:none;border-radius:14px;padding:15px 18px;font-family:'Manrope',sans-serif;font-weight:700;font-size:14.5px;cursor:pointer;">Start learning</button>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- LIBRARY VIEW -->
+  <div class="view active" id="view-library">
+    <div class="header">
+      <div>
+        <div class="eyebrow">Study Companion · <span id="mediumLabel">English</span> Medium</div>
+        <h1 style="font-size:26px;">Study Companion</h1>
+      </div>
+      <div class="logo">🎓</div>
+    </div>
+
+    <div class="hero">
+      <div class="tag" id="heroTag">Welcome back</div>
+      <h2 id="heroTitle">Learn your TS SCERT textbooks</h2>
+      <p id="heroSub">Open the real PDF for any subject, mark it up with the pencil or laser tool, and bookmark what matters.</p>
+    </div>
+
+    <div class="section-label">Choose your class</div>
+    <div class="chips" id="classChips"></div>
+
+    <div class="section-label">Medium</div>
+    <div class="chips" id="mediumChips"></div>
+
+    <div class="chips" id="subjectChips" style="margin-top:12px;"></div>
+
+    <div class="book-list" id="bookList"></div>
+
+    <div class="adslot">
+      <div class="l1">Sponsored</div>
+      <div class="l2">Ad unit renders here once deployed with a live network ID</div>
+    </div>
+
+    <div class="footer">
+      <div class="dev">Developed by <b>Mr_Akhil_Netha</b></div>
+      <a href="https://instagram.com/itzzz_akhil_netha" target="_blank" rel="noopener">Follow us @itzzz_akhil_netha on Instagram</a>
+    </div>
+  </div>
+
+  <!-- BOOK DETAIL VIEW -->
+  <div class="view" id="view-detail">
+    <div class="detail-pad">
+      <button class="back-btn" onclick="showView('library')">‹ Library</button>
+      <div class="detail-head">
+        <div class="book-icon" id="detailIcon">📚</div>
+        <div class="book-meta">
+          <div class="book-subject" id="detailSubjectLine"></div>
+          <h1 style="font-size:20px;margin:2px 0 0;" id="detailTitle"></h1>
+        </div>
+        <button class="icon-btn" id="bookmarkBtn" onclick="toggleBookmark()">☆</button>
+      </div>
+      <button class="open-pdf-btn" onclick="openPdf()">📄&nbsp;&nbsp;Open textbook PDF</button>
+      <a class="drive-link" id="driveLink" href="#" target="_blank" rel="noopener">Open in Google Drive ↗</a>
+    </div>
+  </div>
+
+  <!-- SAVED VIEW -->
+  <div class="view" id="view-saved">
+    <div class="detail-pad">
+      <div class="eyebrow">Bookmarked</div>
+      <h1 style="font-size:24px;margin:4px 0 20px;">Saved textbooks</h1>
+      <div class="saved-list" id="savedList"></div>
+      <div class="footer">
+        <a href="https://instagram.com/itzzz_akhil_netha" target="_blank" rel="noopener">Follow us @itzzz_akhil_netha on Instagram</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOLVER VIEW -->
+  <div class="view" id="view-solver">
+    <div style="padding:22px 18px 12px;">
+      <div class="eyebrow">Ask anything</div>
+      <h1 style="font-size:24px;margin:4px 0 0;">Solver</h1>
+    </div>
+
+    <div id="apiKeyBox" style="margin:0 18px 14px;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--card);display:none;">
+      <div style="font-family:'Manrope',sans-serif;font-size:12.5px;color:var(--sub);line-height:1.5;margin-bottom:10px;">
+        Add your own Anthropic API key to use the solver. It's stored only in this browser (localStorage) — never sent anywhere except directly to api.anthropic.com. Get one at
+        <a href="https://console.anthropic.com" target="_blank" rel="noopener" style="color:#C1432E;">console.anthropic.com</a>.
+      </div>
+      <div style="display:flex;gap:8px;">
+        <input id="apiKeyInput" type="password" placeholder="sk-ant-..." style="flex:1;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px;font-family:'Manrope',sans-serif;">
+        <button onclick="saveApiKey()" style="border:none;border-radius:10px;background:var(--ink);color:var(--cream);padding:10px 14px;font-weight:700;font-size:13px;cursor:pointer;">Save</button>
+      </div>
+    </div>
+
+    <div id="chatLog" style="padding:0 18px;height:calc(100vh - 300px);overflow-y:auto;"></div>
+
+    <div style="padding:12px 18px 18px;border-top:1px solid var(--line);position:sticky;bottom:84px;background:var(--cream);">
+      <div id="pendingImageBox" style="display:none;align-items:center;gap:10px;margin-bottom:10px;">
+        <img id="pendingImagePreview" style="width:44px;height:44px;border-radius:8px;object-fit:cover;">
+        <div style="font-size:12.5px;color:var(--sub);flex:1;">Photo attached</div>
+        <button class="icon-btn" onclick="clearPendingImage()">✕</button>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input type="file" id="fileInput" accept="image/*" capture="environment" style="display:none;" onchange="handlePickImage(event)">
+        <button class="tool-btn" onclick="document.getElementById('fileInput').click()" title="Attach photo">📷</button>
+        <input id="chatInput" placeholder="e.g. Solve x² - 5x + 6 = 0" style="flex:1;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;font-family:'Manrope',sans-serif;" onkeydown="if(event.key==='Enter') sendMessage();">
+        <button class="tool-btn" style="background:var(--ink);color:var(--cream);border-color:var(--ink);" onclick="sendMessage()" title="Send">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOLVER VIEW END -->
+
+  <!-- STUDY VIEW (Timer + To-Do) -->
+  <div class="view" id="view-study">
+    <div style="padding:22px 18px 12px;">
+      <div class="eyebrow">Focus mode</div>
+      <h1 style="font-size:24px;margin:4px 0 0;">Study</h1>
+    </div>
+
+    <div style="margin:0 18px;border-radius:18px;background:linear-gradient(135deg,#3A342B,#4E4738);padding:26px 22px;text-align:center;">
+      <div id="timerDisplay" style="font-family:'Space Mono',monospace;font-size:48px;font-weight:700;color:#F6EDDD;letter-spacing:1px;">25:00</div>
+      <div style="font-family:'Manrope',sans-serif;font-size:12px;color:#C9C0AE;margin-top:4px;" id="timerModeLabel">Focus session</div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:18px;">
+        <button class="tool-btn" style="width:auto;padding:0 16px;background:#F6EDDD;border-color:#F6EDDD;" onclick="timerToggle()" id="timerToggleBtn">Start</button>
+        <button class="tool-btn" style="width:auto;padding:0 16px;background:transparent;border-color:#8A7A5C;color:#F6EDDD;" onclick="timerReset()">Reset</button>
+      </div>
+      <div style="display:flex;gap:6px;justify-content:center;margin-top:14px;">
+        <button class="chip" style="background:transparent;border-color:#8A7A5C;color:#F6EDDD;padding:6px 12px;font-size:12px;" onclick="timerSetPreset(25)">25 min</button>
+        <button class="chip" style="background:transparent;border-color:#8A7A5C;color:#F6EDDD;padding:6px 12px;font-size:12px;" onclick="timerSetPreset(15)">15 min</button>
+        <button class="chip" style="background:transparent;border-color:#8A7A5C;color:#F6EDDD;padding:6px 12px;font-size:12px;" onclick="timerSetPreset(5)">5 min break</button>
+      </div>
+    </div>
+
+    <div class="section-label">To-do</div>
+    <div style="display:flex;gap:8px;padding:0 18px;margin-bottom:14px;">
+      <input id="todoInput" placeholder="Add a study task…" style="flex:1;border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-size:14px;font-family:'Manrope',sans-serif;" onkeydown="if(event.key==='Enter') addTodo();">
+      <button class="tool-btn" style="width:auto;padding:0 16px;background:var(--ink);color:var(--cream);border-color:var(--ink);" onclick="addTodo()">Add</button>
+    </div>
+    <div id="todoList" style="display:flex;flex-direction:column;gap:8px;padding:0 18px;"></div>
+    <div class="footer">
+      <a href="https://instagram.com/itzzz_akhil_netha" target="_blank" rel="noopener">Follow us @itzzz_akhil_netha on Instagram</a>
+    </div>
+  </div>
+
+  <!-- QUIZ VIEW -->
+  <div class="view" id="view-quiz">
+    <div style="padding:22px 18px 12px;">
+      <div class="eyebrow">Test yourself</div>
+      <h1 style="font-size:24px;margin:4px 0 0;">Quiz</h1>
+      <p style="font-family:'Manrope',sans-serif;font-size:12.5px;color:var(--sub);line-height:1.5;margin:8px 0 0;">Photograph a page from your textbook and get a quick quiz based on it.</p>
+    </div>
+
+    <div style="padding:16px 18px;">
+      <input type="file" id="quizFileInput" accept="image/*" capture="environment" style="display:none;" onchange="handleQuizPhoto(event)">
+      <button onclick="document.getElementById('quizFileInput').click()" style="width:100%;display:flex;align-items:center;gap:12px;background:var(--ink);border:none;border-radius:14px;padding:16px 18px;cursor:pointer;color:var(--cream);font-family:'Manrope',sans-serif;font-weight:700;font-size:14.5px;">
+        📷 Take a photo of the lesson
+      </button>
+      <div id="quizPhotoPreviewBox" style="display:none;margin-top:12px;">
+        <img id="quizPhotoPreview" style="width:100%;border-radius:12px;display:block;">
+      </div>
+      <div id="quizStatus" style="text-align:center;font-family:'Manrope',sans-serif;font-size:13px;color:var(--sub);margin-top:12px;"></div>
+    </div>
+
+    <div id="quizBody" style="padding:0 18px 20px;"></div>
+    <div class="footer">
+      <a href="https://instagram.com/itzzz_akhil_netha" target="_blank" rel="noopener">Follow us @itzzz_akhil_netha on Instagram</a>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <button class="nav-btn active" data-tab="library" onclick="switchTab('library')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Library
+    </button>
+    <button class="nav-btn" data-tab="study" onclick="switchTab('study')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      Study
+    </button>
+    <button class="nav-btn" data-tab="quiz" onclick="switchTab('quiz')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.7-2.5 2-2.5 4"/><path d="M12 17h.01"/></svg>
+      Quiz
+    </button>
+    <button class="nav-btn" data-tab="saved" onclick="switchTab('saved')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      Saved
+    </button>
+    <button class="nav-btn" data-tab="solver" onclick="switchTab('solver')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>
+      Solver
+    </button>
+  </div>
+</div>
+
+<!-- PDF VIEWER -->
+<div id="pdfOverlay">
+  <div class="pdf-topbar">
+    <button class="icon-btn" onclick="closePdf()">‹ Back</button>
+    <div class="pdf-title" id="pdfTitle"></div>
+    <a class="icon-btn" id="pdfDriveLink" href="#" target="_blank" rel="noopener">↗</a>
+  </div>
+  <div class="pdf-frame-wrap">
+    <iframe id="pdfFrame" src="" allow="autoplay"></iframe>
+    <canvas id="annCanvas"></canvas>
+  </div>
+  <div class="tool-row">
+    <button class="tool-btn" id="toolNone" onclick="setTool('none')" title="No tool (scroll PDF)">👆</button>
+    <button class="tool-btn" id="toolPencil" onclick="setTool('pencil')" title="Pencil">✏️</button>
+    <button class="tool-btn" id="toolLaser" onclick="setTool('laser')" title="Laser highlighter">🔆</button>
+    <button class="tool-btn" onclick="clearAnnotations()" title="Clear marks">🧹</button>
+    <span style="flex:1"></span>
+    <span style="font-family:'Manrope',sans-serif;font-size:11px;color:var(--sub);">Draw over the page to mark it up</span>
+  </div>
+</div>
+
+<script>
+// ---------- Data ----------
+const TB = (klass, subject, language, title, driveId) => ({
+  id: (klass+subject+language).replace(/\s+/g,''), class: klass, subject, language, title, driveId
+});
+
+const TEXTBOOKS = [
+  // Class 10
+  TB("Class 10","Mathematics","English","Mathematics — Class 10","1JnqUMz40C7-_E5kBwfH7vROnoghKrOUZ"),
+  TB("Class 10","Physical Science","English","Physical Science — Class 10","15Rxe8Ndtpuv8IUe0QFumIY4gZZjYO6v7"),
+  TB("Class 10","Biology","English","Biology — Class 10","1GeejsohpPfadNNRiEHJfKIGDtFPDdzql"),
+  TB("Class 10","Social Studies","English","Social Studies — Class 10","1gCLWs_ERF_fzPqkMV1jdlfL3phuFb_0K"),
+  TB("Class 10","English","English","English Reader — Class 10","1KUG-k5SjHI6_imKrwczAq7R-RuwuUvck"),
+  TB("Class 10","Telugu (First Language)","English","తెలుగు — పదవ తరగతి","10E_1uxsfAmP8rkvFUUaBaQBe-HBslPsN"),
+  TB("Class 10","Hindi (Second Language)","English","हिन्दी — कक्षा 10","1VAuat4nvdNIK2fRFySrwMTcrgZDAPHgx"),
+  TB("Class 10","Mathematics","Telugu","గణితం — పదవ తరగతి","14tsHOlMD-93PGv5qGqrJYa5KuemNhytR"),
+  TB("Class 10","Physical Science","Telugu","భౌతిక శాస్త్రం — పదవ తరగతి","1QJv2W5ArrEdwoid0ihdnTou7mHR-NyB-"),
+  TB("Class 10","Biology","Telugu","జీవశాస్త్రం — పదవ తరగతి","1k8Jh7shIvVKwsN1HsOKNr1zntKT0XH9Q"),
+  TB("Class 10","Social Studies","Telugu","సాంఘిక శాస్త్రం — పదవ తరగతి","141LFyjiQlY0jzVcjizwnlBFmAv4GlIoB"),
+  TB("Class 10","Telugu (First Language)","Telugu","తెలుగు — పదవ తరగతి","10E_1uxsfAmP8rkvFUUaBaQBe-HBslPsN"),
+  TB("Class 10","Hindi (Second Language)","Telugu","हिन्दी — कक्षा 10","1VAuat4nvdNIK2fRFySrwMTcrgZDAPHgx"),
+  TB("Class 10","English","Telugu","English Reader — Class 10","1KUG-k5SjHI6_imKrwczAq7R-RuwuUvck"),
+
+  // Class 9
+  TB("Class 9","Mathematics","English","Mathematics — Class 9","1zpBoy4l96X3Z5hqOLZDdHpvpJQXqssdf"),
+  TB("Class 9","Physical Science","English","Physical Science — Class 9","1DL4asYqhiyjqKSduaqKrhiz4C1v_tl_3"),
+  TB("Class 9","Biology","English","Biology — Class 9","1HpcnfYw5HwIM39BtbqtpmPogDOdedCQ6"),
+  TB("Class 9","Social Studies","English","Social Studies — Class 9","1dKJydSECHMGx3dZ3QoLw1OmD6diSwJrz"),
+  TB("Class 9","English","English","English Reader — Class 9","1ijbHr42Br6SbqOevwTgqVwm_K1nyiG4K"),
+  TB("Class 9","Telugu (First Language)","English","తెలుగు — తొమ్మిదవ తరగతి","1qifaZP54m-q0kQ8N8vjZmYGnC2y5ls5H"),
+  TB("Class 9","Hindi (Second Language)","English","हिन्दी — कक्षा 9","1BZNW0BQiHhbS-uF9y-TLy_Hu7v-DeF7w"),
+  TB("Class 9","Mathematics","Telugu","గణితం — తొమ్మిదవ తరగతి","1z0vjrqsrJJGqO8YNum5PvlrxMlKOxf5Y"),
+  TB("Class 9","Physical Science","Telugu","భౌతిక శాస్త్రం — తొమ్మిదవ తరగతి","1I5e6MF68cap2Ywrvb5u3ePapqGXc34Km"),
+  TB("Class 9","Biology","Telugu","జీవశాస్త్రం — తొమ్మిదవ తరగతి","1_328WstpKDUorNStbiPfOuwajZMIdxbI"),
+  TB("Class 9","Social Studies","Telugu","సాంఘిక శాస్త్రం — తొమ్మిదవ తరగతి","1hmuXGXE4l5p2cWrW0K0JdxGOH0TGcMUp"),
+  TB("Class 9","Telugu (First Language)","Telugu","తెలుగు — తొమ్మిదవ తరగతి","1qifaZP54m-q0kQ8N8vjZmYGnC2y5ls5H"),
+  TB("Class 9","Hindi (Second Language)","Telugu","हिन्दी — कक्षा 9","1BZNW0BQiHhbS-uF9y-TLy_Hu7v-DeF7w"),
+  TB("Class 9","English","Telugu","English Reader — Class 9","1ijbHr42Br6SbqOevwTgqVwm_K1nyiG4K"),
+
+  // Class 8
+  TB("Class 8","Mathematics","English","Mathematics — Class 8","1xubWSLTva3nKboC2wQQCDHRqm0x7uOMe"),
+  TB("Class 8","Physical Science","English","Physical Science — Class 8","1jDBCSo_7E-ybABFlR1WYnxFPxsm6vDIK"),
+  TB("Class 8","Biology","English","Biology — Class 8","1pe32K9TAoKF0MC-Va-82BIJL6Akf0bYc"),
+  TB("Class 8","Social Studies","English","Social Studies — Class 8","1btOERaqBAiIDjpfvZBrUij17VA7Cwln9"),
+  TB("Class 8","English","English","English Reader — Class 8","1ZEtr73LglIrNv4qX-ZtvO4BPAR6QtUXY"),
+  TB("Class 8","Telugu (First Language)","English","తెలుగు — ఎనిమిదవ తరగతి","1gw46uJcgwBzpDcoMhC5KpyohOKemG0Wq"),
+  TB("Class 8","Hindi (Second Language)","English","हिन्दी — कक्षा 8","1wXy-TQ7DUkH32g4iLIP4Hx-9pUFs3HKj"),
+  TB("Class 8","Mathematics","Telugu","గణితం — ఎనిమిదవ తరగతి","19Cpnfygle8-TkhROem0WVT6j4Rc26xos"),
+  TB("Class 8","Physical Science","Telugu","భౌతిక శాస్త్రం — ఎనిమిదవ తరగతి","1316SsSt1SS43jiirzPcxWquL_c7ci1Hn"),
+  TB("Class 8","Biology","Telugu","జీవశాస్త్రం — ఎనిమిదవ తరగతి","1Y4N-Z7EMAX91P1uv1TV8wp3V8v3NmtE9"),
+  TB("Class 8","Social Studies","Telugu","సాంఘిక శాస్త్రం — ఎనిమిదవ తరగతి","1uicre8847mwbCfNiGXJgcyg7RzqMCcXe"),
+  TB("Class 8","Telugu (First Language)","Telugu","తెలుగు — ఎనిమిదవ తరగతి","1gw46uJcgwBzpDcoMhC5KpyohOKemG0Wq"),
+  TB("Class 8","Hindi (Second Language)","Telugu","हिन्दी — कक्षा 8","1wXy-TQ7DUkH32g4iLIP4Hx-9pUFs3HKj"),
+  TB("Class 8","English","Telugu","English Reader — Class 8","1ZEtr73LglIrNv4qX-ZtvO4BPAR6QtUXY"),
+
+  // Class 7
+  TB("Class 7","Mathematics","English","Mathematics — Class 7","1HMGC5FMwGLuFisjQb2f5p4s86F3RwS16"),
+  TB("Class 7","General Science","English","General Science — Class 7","1qxQ64tYmS9-pmrq40Y1zzGtmLIJKMnCD"),
+  TB("Class 7","Social Studies","English","Social Studies — Class 7","1itlko6MB7yzMGyXb0fMu4GBgLx0h96E2"),
+  TB("Class 7","English","English","English Reader — Class 7","1_m2evT5AQKQ1hICY1A1O1jSvt8WtbWbt"),
+  TB("Class 7","Telugu (First Language)","English","తెలుగు — ఏడవ తరగతి","11FCqNnLSjLvB6hIiIk8fz9DA36rtUdUW"),
+  TB("Class 7","Hindi (Second Language)","English","हिन्दी — कक्षा 7","1LseI3wbyZm7lJ045lAUp5zcnJSpf4hxS"),
+  TB("Class 7","Mathematics","Telugu","గణితం — ఏడవ తరగతి","126LAWRZFu0Bo6al5PgNE_xJEiQA-V7NA"),
+  TB("Class 7","General Science","Telugu","సామాన్య శాస్త్రం — ఏడవ తరగతి","1tUzemzFLBu0IcqMPcP0Ul9kLqbJTrkWp"),
+  TB("Class 7","Social Studies","Telugu","సాంఘిక శాస్త్రం — ఏడవ తరగతి","1t0diftCafdZFIquXncDF3tiLyrBURndm"),
+  TB("Class 7","Telugu (First Language)","Telugu","తెలుగు — ఏడవ తరగతి","11FCqNnLSjLvB6hIiIk8fz9DA36rtUdUW"),
+  TB("Class 7","Hindi (Second Language)","Telugu","हिन्दी — कक्षा 7","1LseI3wbyZm7lJ045lAUp5zcnJSpf4hxS"),
+  TB("Class 7","English","Telugu","English Reader — Class 7","1_m2evT5AQKQ1hICY1A1O1jSvt8WtbWbt"),
+
+  // Class 6
+  TB("Class 6","Mathematics","English","Mathematics — Class 6","1FXxmc7TXy3p_1PdtpxV8Cz6Mkb3ItyzY"),
+  TB("Class 6","General Science","English","General Science — Class 6","1fGgE90i0-ufPWTN99StRIC8V8In8UmTn"),
+  TB("Class 6","Social Studies","English","Social Studies — Class 6","173R2Nwc90LGK3_DxqvVyP3pxXoUNRBuQ"),
+  TB("Class 6","English","English","English Reader — Class 6","1tw0BmUatRsxMtnVVS4149skw6CL0Zoeh"),
+  TB("Class 6","Telugu (First Language)","English","తెలుగు — ఆరవ తరగతి","1ihntlCJ75dbQ5QUHVXySCuEzLmkgRZ7I"),
+  TB("Class 6","Hindi (Second Language)","English","हिन्दी — कक्षा 6","1lSm3BFWxgyB3CqyoxpU7Mo-2HDTRo2gv"),
+  TB("Class 6","Mathematics","Telugu","గణితం — ఆరవ తరగతి","15iiOsiTSyWc0kHPqA_C-0CHf2igV7bQn"),
+  TB("Class 6","General Science","Telugu","సామాన్య శాస్త్రం — ఆరవ తరగతి","1WAQwWQf1o_uuQgepXM2F2m9H1QJU0QEO"),
+  TB("Class 6","Social Studies","Telugu","సాంఘిక శాస్త్రం — ఆరవ తరగతి","1JUbdIQm7nDRWwNIL7_PNhVlDdHuO4Drz"),
+  TB("Class 6","Telugu (First Language)","Telugu","తెలుగు — ఆరవ తరగతి","1ihntlCJ75dbQ5QUHVXySCuEzLmkgRZ7I"),
+  TB("Class 6","Hindi (Second Language)","Telugu","हिन्दी — कक्षा 6","1lSm3BFWxgyB3CqyoxpU7Mo-2HDTRo2gv"),
+  TB("Class 6","English","Telugu","English Reader — Class 6","1tw0BmUatRsxMtnVVS4149skw6CL0Zoeh"),
+];
+
+const SUBJECT_META = {
+  Mathematics:{accent:"#B4523A",tint:"#F5DED6",icon:"➗"},
+  "Physical Science":{accent:"#8A7A5C",tint:"#EAE3D2",icon:"🧪"},
+  Biology:{accent:"#5C7A4C",tint:"#DEE7D2",icon:"🌿"},
+  "General Science":{accent:"#6E8A5C",tint:"#E2E9D6",icon:"🔬"},
+  English:{accent:"#4C6B7A",tint:"#D9E4E7",icon:"📘"},
+  "Social Studies":{accent:"#8A5C3A",tint:"#EBDCCB",icon:"🌍"},
+  "Telugu (First Language)":{accent:"#A6432E",tint:"#F2DAD2",icon:"📖"},
+  "Hindi (Second Language)":{accent:"#5C4C8A",tint:"#DFD8ED",icon:"📕"},
+};
+const CLASSES = ["Class 6","Class 7","Class 8","Class 9","Class 10"];
+const LANGUAGES = ["English","Telugu"];
+const LANG_LABEL = {English:"English",Telugu:"తెలుగు"};
+const SUBJECT_ORDER = ["Mathematics","Physical Science","Biology","General Science","Social Studies","English","Telugu (First Language)","Hindi (Second Language)"];
+
+// ---------- State ----------
+let state = {
+  klass: "Class 10",
+  subject: "All",
+  medium: "English",
+  bookmarks: JSON.parse(localStorage.getItem('sc_bookmarks') || '[]'),
+  openBook: null,
+};
+
+function saveBookmarks(){ localStorage.setItem('sc_bookmarks', JSON.stringify(state.bookmarks)); }
+function isBookmarked(id){ return state.bookmarks.some(b=>b.bookId===id); }
+
+// ---------- Render: chips ----------
+function renderClassChips(){
+  const el = document.getElementById('classChips');
+  el.innerHTML = '';
+  CLASSES.forEach(c=>{
+    const b = document.createElement('button');
+    b.className = 'chip' + (state.klass===c ? ' active':'');
+    b.textContent = c;
+    b.onclick = ()=>{ state.klass=c; renderAll(); };
+    el.appendChild(b);
+  });
+}
+function renderMediumChips(){
+  const el = document.getElementById('mediumChips');
+  el.innerHTML = '';
+  LANGUAGES.forEach(l=>{
+    const b = document.createElement('button');
+    b.className = 'chip' + (state.medium===l ? ' active':'');
+    b.textContent = LANG_LABEL[l];
+    b.onclick = ()=>{ state.medium=l; renderAll(); };
+    el.appendChild(b);
+  });
+  document.getElementById('mediumLabel').textContent = LANG_LABEL[state.medium];
+}
+function availableSubjects(){
+  const set = SUBJECT_ORDER.filter(s => TEXTBOOKS.some(b=>b.class===state.klass && b.subject===s));
+  return ["All", ...set];
+}
+function renderSubjectChips(){
+  const el = document.getElementById('subjectChips');
+  el.innerHTML = '';
+  availableSubjects().forEach(s=>{
+    const b = document.createElement('button');
+    b.className = 'chip' + (state.subject===s ? ' active':'');
+    b.textContent = s;
+    b.onclick = ()=>{ state.subject=s; renderAll(); };
+    el.appendChild(b);
+  });
+}
+
+// ---------- Render: book list ----------
+function filteredBooks(){
+  return TEXTBOOKS.filter(b=>
+    b.class===state.klass &&
+    b.language===state.medium &&
+    (state.subject==="All" || b.subject===state.subject)
+  );
+}
+function renderBookList(){
+  const el = document.getElementById('bookList');
+  el.innerHTML = '';
+  const books = filteredBooks();
+  if(books.length===0){
+    el.innerHTML = '<div class="empty">No textbooks for this class, medium, and subject yet.</div>';
+    return;
+  }
+  books.forEach(b=>{
+    const meta = SUBJECT_META[b.subject];
+    const btn = document.createElement('button');
+    btn.className = 'book-card';
+    btn.style.background = meta.tint;
+    btn.onclick = ()=> openDetail(b);
+    btn.innerHTML = `
+      <div class="book-icon" style="background:${meta.accent}">${meta.icon}</div>
+      <div class="book-meta">
+        <div class="book-subject" style="color:${meta.accent}">${b.subject}</div>
+        <div class="book-title">${b.title}</div>
+        <div class="tags">
+          <span class="tag-pill">${b.class}</span>
+          <span class="tag-pill">${LANG_LABEL[b.language]}</span>
+        </div>
+      </div>
+      <div class="chevron">›</div>
+    `;
+    el.appendChild(btn);
+  });
+}
+
+function renderAll(){
+  renderClassChips();
+  renderMediumChips();
+  renderSubjectChips();
+  renderBookList();
+}
+
+// ---------- Detail view ----------
+function openDetail(book){
+  state.openBook = book;
+  const meta = SUBJECT_META[book.subject];
+  document.getElementById('detailIcon').style.background = meta.accent;
+  document.getElementById('detailIcon').textContent = meta.icon;
+  document.getElementById('detailSubjectLine').textContent = `${book.subject} · ${book.class} · ${LANG_LABEL[book.language]}`;
+  document.getElementById('detailSubjectLine').style.color = meta.accent;
+  document.getElementById('detailTitle').textContent = book.title;
+  document.getElementById('bookmarkBtn').textContent = isBookmarked(book.id) ? '★' : '☆';
+  document.getElementById('driveLink').href = `https://drive.google.com/file/d/${book.driveId}/view`;
+  showView('detail');
+}
+function toggleBookmark(){
+  const book = state.openBook;
+  if(!book) return;
+  if(isBookmarked(book.id)){
+    state.bookmarks = state.bookmarks.filter(b=>b.bookId!==book.id);
+  } else {
+    state.bookmarks.push({bookId:book.id, title:book.title, subject:book.subject, class:book.class, language:book.language, driveId:book.driveId});
+  }
+  saveBookmarks();
+  document.getElementById('bookmarkBtn').textContent = isBookmarked(book.id) ? '★' : '☆';
+  renderSaved();
+}
+
+// ---------- Saved view ----------
+function renderSaved(){
+  const el = document.getElementById('savedList');
+  el.innerHTML = '';
+  if(state.bookmarks.length===0){
+    el.innerHTML = '<div class="empty" style="padding:0;">Nothing saved yet. Open a textbook and tap the star to keep it here.</div>';
+    return;
+  }
+  state.bookmarks.forEach(b=>{
+    const meta = SUBJECT_META[b.subject];
+    const btn = document.createElement('button');
+    btn.className = 'saved-card';
+    btn.style.background = meta.tint;
+    btn.onclick = ()=>{
+      const full = TEXTBOOKS.find(x=>x.id===b.bookId);
+      if(full){ switchTab('library'); openDetail(full); }
+    };
+    btn.innerHTML = `
+      <div style="color:${meta.accent};font-size:18px;">★</div>
+      <div style="flex:1;min-width:0;">
+        <div class="saved-title">${b.title}</div>
+        <div class="saved-sub">${b.subject} · ${b.class}</div>
+      </div>
+      <div class="chevron">›</div>
+    `;
+    el.appendChild(btn);
+  });
+}
+
+// ---------- Views / tabs ----------
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+}
+function switchTab(tab){
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  if(tab==='saved'){ renderSaved(); showView('saved'); }
+  else if(tab==='solver'){ showView('solver'); }
+  else if(tab==='study'){ renderTodos(); showView('study'); }
+  else if(tab==='quiz'){ showView('quiz'); }
+  else { showView('library'); }
+}
+
+// ---------- PDF viewer + annotation ----------
+let tool = 'none';
+let drawing = false;
+let ctx, canvas;
+let laserPoints = [];
+
+function openPdf(){
+  const book = state.openBook;
+  if(!book) return;
+  document.getElementById('pdfTitle').textContent = book.title;
+  document.getElementById('pdfFrame').src = `https://drive.google.com/file/d/${book.driveId}/preview`;
+  document.getElementById('pdfDriveLink').href = `https://drive.google.com/file/d/${book.driveId}/view`;
+  document.getElementById('pdfOverlay').classList.add('open');
+  setupCanvas();
+  setTool('none');
+}
+function closePdf(){
+  document.getElementById('pdfOverlay').classList.remove('open');
+  document.getElementById('pdfFrame').src = '';
+  cancelAnimationFrame(laserRAF);
+}
+function setupCanvas(){
+  canvas = document.getElementById('annCanvas');
+  const wrap = canvas.parentElement;
+  canvas.width = wrap.clientWidth;
+  canvas.height = wrap.clientHeight;
+  ctx = canvas.getContext('2d');
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+}
+window.addEventListener('resize', ()=>{ if(document.getElementById('pdfOverlay').classList.contains('open')) setupCanvas(); });
+
+function setTool(t){
+  tool = t;
+  document.getElementById('toolNone').classList.toggle('active', t==='none');
+  document.getElementById('toolPencil').classList.toggle('active', t==='pencil');
+  document.getElementById('toolLaser').classList.toggle('active', t==='laser');
+  if(canvas) canvas.style.pointerEvents = (t==='none') ? 'none' : 'auto';
+}
+function clearAnnotations(){
+  if(ctx) ctx.clearRect(0,0,canvas.width,canvas.height);
+  laserPoints = [];
+}
+
+function getPos(e){
+  const rect = canvas.getBoundingClientRect();
+  const p = e.touches ? e.touches[0] : e;
+  return { x: p.clientX - rect.left, y: p.clientY - rect.top };
+}
+function startDraw(e){
+  if(tool==='none') return;
+  drawing = true;
+  const pos = getPos(e);
+  if(tool==='pencil'){
+    ctx.beginPath();
+    ctx.moveTo(pos.x,pos.y);
+  } else if(tool==='laser'){
+    laserPoints.push({x:pos.x,y:pos.y,t:Date.now()});
+  }
+  e.preventDefault();
+}
+function moveDraw(e){
+  if(!drawing || tool==='none') return;
+  const pos = getPos(e);
+  if(tool==='pencil'){
+    ctx.strokeStyle = '#2A231C';
+    ctx.lineWidth = 2.5;
+    ctx.lineTo(pos.x,pos.y);
+    ctx.stroke();
+  } else if(tool==='laser'){
+    laserPoints.push({x:pos.x,y:pos.y,t:Date.now()});
+  }
+  e.preventDefault();
+}
+function endDraw(){ drawing = false; }
+
+let laserRAF;
+function laserLoop(){
+  if(tool==='laser' || laserPoints.length){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const now = Date.now();
+    laserPoints = laserPoints.filter(p => now - p.t < 700);
+    laserPoints.forEach(p=>{
+      const age = (now - p.t)/700;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 14*(1-age)+4, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255, 90, 60, ${0.55*(1-age)})`;
+      ctx.fill();
+    });
+  }
+  laserRAF = requestAnimationFrame(laserLoop);
+}
+laserLoop();
+
+// ---------- Solver ----------
+let chatHistory = [];
+let pendingImage = null;
+
+function getApiKey(){ return localStorage.getItem('sc_api_key') || ''; }
+function saveApiKey(){
+  const val = document.getElementById('apiKeyInput').value.trim();
+  if(val){ localStorage.setItem('sc_api_key', val); }
+  document.getElementById('apiKeyBox').style.display = 'none';
+}
+function toggleApiKeyBox(){
+  const box = document.getElementById('apiKeyBox');
+  box.style.display = (box.style.display === 'none') ? 'block' : 'none';
+  document.getElementById('apiKeyInput').value = getApiKey();
+}
+function initSolver(){
+  if(chatHistory.length===0){
+    appendMessage('assistant', "Hi! Type a question, or attach a photo of a problem and I'll walk you through it step by step.");
+  }
+  if(!getApiKey()){
+    document.getElementById('apiKeyBox').style.display = 'block';
+  }
+}
+function handlePickImage(e){
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    pendingImage = { dataUrl: reader.result, mediaType: file.type || 'image/jpeg' };
+    document.getElementById('pendingImagePreview').src = pendingImage.dataUrl;
+    document.getElementById('pendingImageBox').style.display = 'flex';
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+function clearPendingImage(){
+  pendingImage = null;
+  document.getElementById('pendingImageBox').style.display = 'none';
+}
+function appendMessage(role, text, imageUrl){
+  const log = document.getElementById('chatLog');
+  const row = document.createElement('div');
+  row.style.cssText = `display:flex;justify-content:${role==='user'?'flex-end':'flex-start'};margin-bottom:10px;`;
+  const bubble = document.createElement('div');
+  bubble.style.cssText = `max-width:85%;background:${role==='user'?'var(--ink)':'var(--card)'};color:${role==='user'?'var(--cream)':'var(--ink)'};border:${role==='user'?'none':'1px solid var(--line)'};border-radius:16px;padding:11px 14px;font-size:14px;line-height:1.55;white-space:pre-wrap;`;
+  if(imageUrl){
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    img.style.cssText = 'max-width:100%;border-radius:10px;margin-bottom:8px;display:block;';
+    bubble.appendChild(img);
+  }
+  bubble.appendChild(document.createTextNode(text));
+  row.appendChild(bubble);
+  log.appendChild(row);
+  log.scrollTop = log.scrollHeight;
+  return row;
+}
+async function sendMessage(){
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if(!text && !pendingImage) return;
+  const apiKey = getApiKey();
+  if(!apiKey){
+    document.getElementById('apiKeyBox').style.display = 'block';
+    return;
+  }
+  const imageForDisplay = pendingImage ? pendingImage.dataUrl : null;
+  appendMessage('user', text, imageForDisplay);
+
+  let userContent;
+  if(pendingImage){
+    const base64 = pendingImage.dataUrl.split(',')[1] || '';
+    userContent = [
+      { type:'image', source:{ type:'base64', media_type: pendingImage.mediaType, data: base64 } },
+      { type:'text', text: text || 'Please solve or explain what is shown in this image, step by step.' }
+    ];
+  } else {
+    userContent = text;
+  }
+  chatHistory.push({ role:'user', content: userContent });
+  input.value = '';
+  clearPendingImage();
+
+  const loadingRow = appendMessage('assistant', 'Thinking…');
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: "You are a patient study tutor for school students (roughly Class 6-10). Explain concepts simply and show step-by-step working for problems, including problems shown in a photo. Keep answers focused and clear, using short paragraphs or numbered steps.",
+        messages: chatHistory
+      })
+    });
+    const data = await response.json();
+    loadingRow.remove();
+    if(data.error){
+      appendMessage('assistant', 'Error: ' + (data.error.message || 'Something went wrong. Check your API key.'));
+      return;
+    }
+    const replyText = (data.content || []).map(c=>c.text||'').join('\n').trim() || "Sorry, I couldn't work that out — try rephrasing.";
+    appendMessage('assistant', replyText);
+    chatHistory.push({ role:'assistant', content: replyText });
+  } catch(err){
+    loadingRow.remove();
+    appendMessage('assistant', 'Something went wrong reaching the solver. Please check your connection and API key.');
+  }
+}
+
+// ---------- Onboarding ----------
+function getProfile(){
+  const raw = localStorage.getItem('sc_profile');
+  return raw ? JSON.parse(raw) : null;
+}
+let onboardRole = 'Student';
+function renderOnboardRoleChips(selected){
+  const el = document.getElementById('onboardRoleChips');
+  el.innerHTML = '';
+  ['Student','Teacher'].forEach(r=>{
+    const b = document.createElement('button');
+    b.className = 'chip' + (selected===r ? ' active' : '');
+    b.textContent = r;
+    b.onclick = ()=>{
+      onboardRole = r;
+      document.querySelectorAll('#onboardRoleChips .chip').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      document.getElementById('onboardClassLabel').textContent = (r==='Teacher') ? 'Class you teach' : 'Your class';
+    };
+    el.appendChild(b);
+  });
+}
+function renderOnboardClassChips(selected){
+  const el = document.getElementById('onboardClassChips');
+  el.innerHTML = '';
+  CLASSES.forEach(c=>{
+    const b = document.createElement('button');
+    b.className = 'chip' + (selected===c ? ' active' : '');
+    b.textContent = c;
+    b.dataset.klass = c;
+    b.onclick = ()=>{
+      document.querySelectorAll('#onboardClassChips .chip').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+    };
+    el.appendChild(b);
+  });
+}
+function submitOnboarding(){
+  const name = document.getElementById('onboardName').value.trim();
+  const school = document.getElementById('onboardSchool').value.trim();
+  const activeChip = document.querySelector('#onboardClassChips .chip.active');
+  const klass = activeChip ? activeChip.dataset.klass : 'Class 10';
+  if(!name){ document.getElementById('onboardName').focus(); return; }
+  const profile = { name, school, klass, role: onboardRole };
+  localStorage.setItem('sc_profile', JSON.stringify(profile));
+  document.getElementById('onboardOverlay').style.display = 'none';
+  applyProfile(profile);
+}
+function applyProfile(profile){
+  if(!profile) return;
+  state.klass = profile.klass || state.klass;
+  const roleLabel = profile.role === 'Teacher' ? 'Teacher' : 'Student';
+  document.getElementById('heroTag').textContent = 'Welcome back, ' + profile.name.split(' ')[0] + ' · ' + roleLabel;
+  document.getElementById('heroTitle').textContent = profile.school
+    ? `${profile.school} · ${profile.klass}`
+    : `Learn your TS SCERT textbooks`;
+  renderAll();
+}
+function initOnboarding(){
+  const profile = getProfile();
+  if(!profile){
+    document.getElementById('onboardOverlay').style.display = 'flex';
+    renderOnboardRoleChips('Student');
+    renderOnboardClassChips('Class 10');
+  } else {
+    applyProfile(profile);
+  }
+}
+
+// ---------- Study Timer ----------
+let timerSeconds = 25*60;
+let timerTotal = 25*60;
+let timerRunning = false;
+let timerInterval = null;
+
+function formatTime(s){
+  const m = Math.floor(s/60);
+  const sec = s%60;
+  return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+}
+function renderTimer(){
+  document.getElementById('timerDisplay').textContent = formatTime(timerSeconds);
+}
+function timerToggle(){
+  if(timerRunning){
+    clearInterval(timerInterval);
+    timerRunning = false;
+    document.getElementById('timerToggleBtn').textContent = 'Start';
+  } else {
+    timerRunning = true;
+    document.getElementById('timerToggleBtn').textContent = 'Pause';
+    timerInterval = setInterval(()=>{
+      if(timerSeconds > 0){
+        timerSeconds--;
+        renderTimer();
+      } else {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        document.getElementById('timerToggleBtn').textContent = 'Start';
+        document.getElementById('timerModeLabel').textContent = "Time's up!";
+      }
+    }, 1000);
+  }
+}
+function timerReset(){
+  clearInterval(timerInterval);
+  timerRunning = false;
+  timerSeconds = timerTotal;
+  document.getElementById('timerToggleBtn').textContent = 'Start';
+  document.getElementById('timerModeLabel').textContent = 'Focus session';
+  renderTimer();
+}
+function timerSetPreset(mins){
+  clearInterval(timerInterval);
+  timerRunning = false;
+  timerTotal = mins*60;
+  timerSeconds = mins*60;
+  document.getElementById('timerToggleBtn').textContent = 'Start';
+  document.getElementById('timerModeLabel').textContent = mins===5 ? 'Break' : 'Focus session';
+  renderTimer();
+}
+
+// ---------- To-Do ----------
+function getTodos(){
+  const raw = localStorage.getItem('sc_todos');
+  return raw ? JSON.parse(raw) : [];
+}
+function saveTodos(list){ localStorage.setItem('sc_todos', JSON.stringify(list)); }
+function addTodo(){
+  const input = document.getElementById('todoInput');
+  const text = input.value.trim();
+  if(!text) return;
+  const list = getTodos();
+  list.push({ id: Date.now().toString(), text, done:false });
+  saveTodos(list);
+  input.value = '';
+  renderTodos();
+}
+function toggleTodo(id){
+  const list = getTodos().map(t => t.id===id ? {...t, done:!t.done} : t);
+  saveTodos(list);
+  renderTodos();
+}
+function deleteTodo(id){
+  const list = getTodos().filter(t => t.id!==id);
+  saveTodos(list);
+  renderTodos();
+}
+function renderTodos(){
+  const el = document.getElementById('todoList');
+  const list = getTodos();
+  el.innerHTML = '';
+  if(list.length===0){
+    el.innerHTML = '<div class="empty" style="padding:0;">No tasks yet. Add one above.</div>';
+    return;
+  }
+  list.forEach(t=>{
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;';
+    row.innerHTML = `
+      <button onclick="toggleTodo('${t.id}')" style="background:none;border:none;cursor:pointer;font-size:16px;color:${t.done?'#5C7A4C':'var(--sub)'};">${t.done ? '☑' : '☐'}</button>
+      <div style="flex:1;font-family:'Manrope',sans-serif;font-size:14px;text-decoration:${t.done?'line-through':'none'};color:${t.done?'var(--sub)':'var(--ink)'};">${t.text}</div>
+      <button onclick="deleteTodo('${t.id}')" style="background:none;border:none;cursor:pointer;color:var(--sub);">✕</button>
+    `;
+    el.appendChild(row);
+  });
+}
+
+// ---------- Quiz ----------
+function handleQuizPhoto(e){
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const dataUrl = reader.result;
+    const mediaType = file.type || 'image/jpeg';
+    document.getElementById('quizPhotoPreview').src = dataUrl;
+    document.getElementById('quizPhotoPreviewBox').style.display = 'block';
+    document.getElementById('quizBody').innerHTML = '';
+    generateQuiz(dataUrl, mediaType);
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+async function generateQuiz(dataUrl, mediaType){
+  const status = document.getElementById('quizStatus');
+  const apiKey = getApiKey();
+  if(!apiKey){
+    status.textContent = 'Add your API key in the Solver tab first (API key settings).';
+    return;
+  }
+  status.textContent = 'Reading the page and building your quiz…';
+  const base64 = dataUrl.split(',')[1] || '';
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1200,
+        system: "You create short quizzes for school students from a photo of a textbook page. Read the page and write exactly 5 multiple-choice questions testing understanding of its content. Respond with ONLY raw JSON (no markdown fences, no preamble): an array of objects, each with 'question' (string), 'options' (array of 4 strings), and 'answerIndex' (0-based integer index of the correct option).",
+        messages: [{
+          role: 'user',
+          content: [
+            { type:'image', source:{ type:'base64', media_type: mediaType, data: base64 } },
+            { type:'text', text: 'Create the quiz from this page.' }
+          ]
+        }]
+      })
+    });
+    const data = await response.json();
+    if(data.error){
+      status.textContent = 'Error: ' + (data.error.message || 'Check your API key.');
+      return;
+    }
+    const raw = (data.content || []).map(c=>c.text||'').join('').trim();
+    const cleaned = raw.replace(/^```json\s*|^```\s*|```$/g,'').trim();
+    let questions;
+    try { questions = JSON.parse(cleaned); }
+    catch(e){ status.textContent = "Couldn't read a quiz from that page — try a clearer photo."; return; }
+    status.textContent = '';
+    renderQuiz(questions);
+  } catch(err){
+    status.textContent = 'Something went wrong generating the quiz. Check your connection.';
+  }
+}
+function renderQuiz(questions){
+  const el = document.getElementById('quizBody');
+  el.innerHTML = '';
+  const answers = new Array(questions.length).fill(null);
+
+  questions.forEach((q, qi)=>{
+    const card = document.createElement('div');
+    card.style.cssText = 'background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;';
+    const qTitle = document.createElement('div');
+    qTitle.style.cssText = "font-family:'Spectral',serif;font-weight:600;font-size:15px;margin-bottom:10px;";
+    qTitle.textContent = (qi+1) + '. ' + q.question;
+    card.appendChild(qTitle);
+
+    q.options.forEach((opt, oi)=>{
+      const optBtn = document.createElement('button');
+      optBtn.style.cssText = 'display:block;width:100%;text-align:left;background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:6px;font-family:\'Manrope\',sans-serif;font-size:13.5px;cursor:pointer;';
+      optBtn.textContent = opt;
+      optBtn.onclick = ()=>{
+        answers[qi] = oi;
+        Array.from(card.querySelectorAll('button[data-opt]')).forEach(b=>{
+          b.style.background = 'var(--cream)';
+          b.style.borderColor = 'var(--line)';
+        });
+        optBtn.style.background = '#EAE3D2';
+        optBtn.style.borderColor = 'var(--ink)';
+      };
+      optBtn.dataset.opt = oi;
+      card.appendChild(optBtn);
+    });
+    el.appendChild(card);
+  });
+
+  const submitBtn = document.createElement('button');
+  submitBtn.textContent = 'Check answers';
+  submitBtn.style.cssText = "width:100%;background:var(--ink);color:var(--cream);border:none;border-radius:14px;padding:15px 18px;font-family:'Manrope',sans-serif;font-weight:700;font-size:14.5px;cursor:pointer;margin-top:4px;";
+  submitBtn.onclick = ()=>{
+    let score = 0;
+    const cards = el.querySelectorAll('div');
+    questions.forEach((q, qi)=>{
+      const card = el.children[qi];
+      const opts = card.querySelectorAll('button[data-opt]');
+      opts.forEach((b,oi)=>{
+        if(oi===q.answerIndex){ b.style.background = '#DEE7D2'; b.style.borderColor = '#5C7A4C'; }
+        else if(oi===answers[qi] && oi!==q.answerIndex){ b.style.background = '#F5DED6'; b.style.borderColor = '#B4523A'; }
+        b.onclick = null;
+        b.style.cursor = 'default';
+      });
+      if(answers[qi]===q.answerIndex) score++;
+    });
+    submitBtn.textContent = `Score: ${score} / ${questions.length}`;
+    submitBtn.disabled = true;
+  };
+  el.appendChild(submitBtn);
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const c = document.getElementById('annCanvas');
+  c.addEventListener('mousedown', startDraw);
+  c.addEventListener('mousemove', moveDraw);
+  c.addEventListener('mouseup', endDraw);
+  c.addEventListener('mouseleave', endDraw);
+  c.addEventListener('touchstart', startDraw, {passive:false});
+  c.addEventListener('touchmove', moveDraw, {passive:false});
+  c.addEventListener('touchend', endDraw);
+  renderAll();
+  initSolver();
+  initOnboarding();
+  renderTimer();
+});
+</script>
+</body>
+</html>
