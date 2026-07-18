@@ -4,6 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Study Companion — TS SCERT Textbooks</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3A342B">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -40,10 +44,6 @@
   .footer .dev{font-size:12px;color:var(--sub);}
   .footer .dev b{color:var(--ink);}
   .footer a{display:inline-block;margin-top:6px;font-family:'Space Mono',monospace;font-size:12px;color:#C1432E;text-decoration:none;font-weight:700;}
-
-  .adslot{margin:18px 18px 0;border-radius:14px;border:1px dashed var(--line);background:rgba(255,255,255,0.5);padding:14px 16px;text-align:center;}
-  .adslot .l1{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--sub);}
-  .adslot .l2{font-family:'Manrope',sans-serif;font-size:11.5px;color:var(--sub);margin-top:4px;}
 
   .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-top:1px solid var(--line);display:flex;padding:10px 0 14px;z-index:40;}
   .nav-btn{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--sub);font-family:'Manrope',sans-serif;font-weight:700;font-size:9.5px;padding:0 2px;}
@@ -140,11 +140,6 @@
     <div class="chips" id="subjectChips" style="margin-top:12px;"></div>
 
     <div class="book-list" id="bookList"></div>
-
-    <div class="adslot">
-      <div class="l1">Sponsored</div>
-      <div class="l2">Ad unit renders here once deployed with a live network ID</div>
-    </div>
 
     <div class="footer">
       <div class="dev">Developed by <b>Mr_Akhil_Netha</b></div>
@@ -1096,6 +1091,12 @@ document.addEventListener('DOMContentLoaded', ()=>{
   initOnboarding();
   renderTimer();
 });
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+  });
+}
 </script>
 </body>
 </html>
